@@ -11,7 +11,7 @@
 #import "TZPhotoPreviewController.h"
 #import "TZAssetCell.h"
 #import "TZAssetModel.h"
-#import "UIView+Layout.h"
+#import "UIView+TZLayout.h"
 #import "TZImageManager.h"
 #import "TZVideoPlayerController.h"
 #import "TZGifPhotoPreviewController.h"
@@ -667,6 +667,17 @@ static CGFloat itemMargin = 5;
         index = indexPath.item - 1;
     }
     TZAssetModel *model = _models[index];
+    
+    if (model.type == TZAssetModelMediaTypeVideo) {
+        NSArray *timeAry = [model.timeLength componentsSeparatedByString:@":"];
+        CGFloat videoLength = [timeAry.firstObject floatValue] * 60.0 + [timeAry.lastObject floatValue];
+        if (tzImagePickerVc.minVideoLength && videoLength < tzImagePickerVc.minVideoLength) {
+            TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
+            [imagePickerVc showAlertWithTitle:[NSString stringWithFormat:[NSBundle tz_localizedStringForKey:@"Video duration ≥%.fs"], imagePickerVc.minVideoLength]];
+            return;
+        }
+    }
+    
     if (model.type == TZAssetModelMediaTypeVideo && !tzImagePickerVc.allowPickingMultipleVideo) {
         if (tzImagePickerVc.selectedModels.count > 0) {
             TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;

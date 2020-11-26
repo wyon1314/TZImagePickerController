@@ -12,7 +12,7 @@
 #import "TZPhotoPreviewController.h"
 #import "TZAssetModel.h"
 #import "TZAssetCell.h"
-#import "UIView+Layout.h"
+#import "UIView+TZLayout.h"
 #import "TZImageManager.h"
 
 @interface TZImagePickerController () {
@@ -161,6 +161,7 @@
     albumPickerVc.columnNumber = columnNumber;
     self = [super initWithRootViewController:albumPickerVc];
     if (self) {
+        self.minVideoLength = 5.0;
         self.maxImagesCount = maxImagesCount > 0 ? maxImagesCount : 9; // Default is 9 / 默认最大可选9张图片
         self.pickerDelegate = delegate;
         self.selectedAssets = [NSMutableArray array];
@@ -470,6 +471,10 @@
         [_HUDIndicatorView stopAnimating];
         [_progressHUD removeFromSuperview];
     }
+}
+
+- (void)setMinVideoLength:(CGFloat)minVideoLength {
+    _minVideoLength = minVideoLength;
 }
 
 - (void)setMaxImagesCount:(NSInteger)maxImagesCount {
